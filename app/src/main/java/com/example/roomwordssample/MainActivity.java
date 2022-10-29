@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.View;
@@ -16,6 +17,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -68,6 +70,30 @@ public class MainActivity extends AppCompatActivity {
                 adapter.setWords(words);
             }
         });
+
+        ItemTouchHelper helper = new ItemTouchHelper
+                (new ItemTouchHelper.SimpleCallback(0,
+                        ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+                    @Override
+                    public boolean onMove(@NonNull RecyclerView recyclerView,
+                                          @NonNull RecyclerView.ViewHolder viewHolder,
+                                          @NonNull RecyclerView.ViewHolder target) {
+                        return false;
+                    }
+
+                    @Override
+                    public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder,
+                                         int direction) {
+                        int position = viewHolder.getAdapterPosition();
+                        Word myWord = adapter.getWordAtPosition(position);
+                        Toast.makeText(MainActivity.this, "Deleting " + myWord.getWord(),
+                                Toast.LENGTH_LONG).show();
+
+                        mWordViewModel.deleteWord(myWord);
+
+                    }
+                });
+        helper.attachToRecyclerView(recyclerView);
     }
 
     @Override
@@ -86,7 +112,13 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         switch (id) {
-            case R.id.action_settings:
+            case R.id.clear_data:
+                // Add toast for confirmation
+                Toast.makeText(this, "Clearing the data...",
+                        Toast.LENGTH_SHORT).show();
+
+                // Delete the existing data
+                mWordViewModel.deleteAll();
                 return true;
         }
         return super.onOptionsItemSelected(item);
