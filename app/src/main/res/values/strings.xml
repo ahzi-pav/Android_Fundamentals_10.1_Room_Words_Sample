@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">RoomWordsSample</string>
+    <string name="action_settings">Settings</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">Room Words Sample</string>
+
+    <string name="hint_word" translatable="false">Word...</string>
+    <string name="button_save" translatable="false">Save</string>
+    <string name="empty_not_saved" translatable="false">Word not saved because it is empty.</string>
+</resources>
